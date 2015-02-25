@@ -1,10 +1,7 @@
 package com.orbitz.consul;
 
 import com.orbitz.consul.model.State;
-import com.orbitz.consul.model.agent.Agent;
-import com.orbitz.consul.model.agent.Check;
-import com.orbitz.consul.model.agent.Member;
-import com.orbitz.consul.model.agent.Registration;
+import com.orbitz.consul.model.agent.*;
 import com.orbitz.consul.model.health.HealthCheck;
 import com.orbitz.consul.model.health.Service;
 
@@ -75,11 +72,7 @@ public class AgentClient {
      * @param tags Tags to register with.
      */
     public void register(int port, long ttl, String name, String id, String... tags) {
-        Registration.Check check = new Registration.Check();
-
-        check.setTtl(String.format("%ss", ttl));
-
-        register(port, check, name, id, tags);
+        register(port, CheckFactory.createTtlCheck(ttl), name, id, tags);
     }
 
     /**
@@ -94,11 +87,24 @@ public class AgentClient {
      * @param tags     Tags to register with.
      */
     public void register(int port, String script, long interval, String name, String id, String... tags) {
-        Registration.Check check = new Registration.Check();
+        register(port, CheckFactory.createScriptCheck(script, interval), name, id, tags);
+    }
 
-        check.setScript(script);
-        check.setInterval(String.format("%ss", interval));
-
+    /**
+     * Registers the client as a service with Consul.  Registration enables
+     * the use of checks.
+     *
+     * @param isHttp   Mark for the check type: true - HttpCheck, false - ScriptCheck
+     * @param port     The public facing port of the service to register with Consul.
+     * @param entity   Entity for registration (script ot http).
+     * @param interval Interval in seconds.
+     * @param name     Service name to register.
+     * @param id       Service id to register.
+     * @param tags     Tags to register with.
+     */
+    public void register(boolean isHttp, int port, String entity, long interval, String name, String id, String... tags) {
+        Registration.Check check = isHttp ? CheckFactory.createHttpCheck(entity, interval) :
+                CheckFactory.createScriptCheck(entity, interval);
         register(port, check, name, id, tags);
     }
 

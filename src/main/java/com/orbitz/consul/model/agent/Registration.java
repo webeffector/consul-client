@@ -61,24 +61,14 @@ public class Registration {
         this.tags = tags;
     }
 
-    public static class Check {
+    public static interface Check {}
 
+    public static class ScriptCheck implements Check {
         @JsonProperty("Script")
         private String script;
 
         @JsonProperty("Interval")
         private String interval;
-
-        @JsonProperty("TTL")
-        private String ttl;
-
-        public String getScript() {
-            return script;
-        }
-
-        public void setScript(String script) {
-            this.script = script;
-        }
 
         public String getInterval() {
             return interval;
@@ -88,6 +78,43 @@ public class Registration {
             this.interval = interval;
         }
 
+        public String getScript() {
+            return script;
+        }
+
+        public void setScript(String script) {
+            this.script = script;
+        }
+    }
+
+    public static class HttpCheck implements Check {
+        @JsonProperty("HTTP")
+        private String http;
+
+        @JsonProperty("Interval")
+        private String interval;
+
+        public String getHttp() {
+            return http;
+        }
+
+        public void setHttp(String http) {
+            this.http = http;
+        }
+
+        public String getInterval() {
+            return interval;
+        }
+
+        public void setInterval(String interval) {
+            this.interval = interval;
+        }
+    }
+
+    public static class TtlCheck implements Check {
+        @JsonProperty("TTL")
+        private String ttl;
+
         public String getTtl() {
             return ttl;
         }
@@ -96,5 +123,4 @@ public class Registration {
             this.ttl = ttl;
         }
     }
-
 }
