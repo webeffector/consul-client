@@ -1,7 +1,10 @@
 package com.orbitz.consul;
 
 import com.orbitz.consul.model.State;
-import com.orbitz.consul.model.agent.*;
+import com.orbitz.consul.model.agent.Agent;
+import com.orbitz.consul.model.agent.Check;
+import com.orbitz.consul.model.agent.Member;
+import com.orbitz.consul.model.agent.Registration;
 import com.orbitz.consul.model.health.HealthCheck;
 import com.orbitz.consul.model.health.Service;
 
@@ -72,7 +75,7 @@ public class AgentClient {
      * @param tags Tags to register with.
      */
     public void register(int port, long ttl, String name, String id, String... tags) {
-        register(port, CheckFactory.createTtlCheck(ttl), name, id, tags);
+        register(port, Registration.CheckFactory.createTtlCheck(ttl), name, id, tags);
     }
 
     /**
@@ -87,7 +90,7 @@ public class AgentClient {
      * @param tags     Tags to register with.
      */
     public void register(int port, String script, long interval, String name, String id, String... tags) {
-        register(port, CheckFactory.createScriptCheck(script, interval), name, id, tags);
+        register(port, Registration.CheckFactory.createScriptCheck(script, interval), name, id, tags);
     }
 
     /**
@@ -103,8 +106,8 @@ public class AgentClient {
      * @param tags     Tags to register with.
      */
     public void register(boolean isHttp, int port, String entity, long interval, String name, String id, String... tags) {
-        Registration.Check check = isHttp ? CheckFactory.createHttpCheck(entity, interval) :
-                CheckFactory.createScriptCheck(entity, interval);
+        Registration.Check check = isHttp ? Registration.CheckFactory.createHttpCheck(entity, interval) :
+                Registration.CheckFactory.createScriptCheck(entity, interval);
         register(port, check, name, id, tags);
     }
 
