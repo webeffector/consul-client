@@ -97,24 +97,6 @@ public class AgentClient {
      * Registers the client as a service with Consul.  Registration enables
      * the use of checks.
      *
-     * @param isHttp   Mark for the check type: true - HttpCheck, false - ScriptCheck
-     * @param port     The public facing port of the service to register with Consul.
-     * @param entity   Entity for registration (script ot http).
-     * @param interval Interval in seconds.
-     * @param name     Service name to register.
-     * @param id       Service id to register.
-     * @param tags     Tags to register with.
-     */
-    public void register(boolean isHttp, int port, String entity, long interval, String name, String id, String... tags) {
-        Registration.Check check = isHttp ? Registration.CheckFactory.createHttpCheck(entity, interval) :
-                Registration.CheckFactory.createScriptCheck(entity, interval);
-        register(port, check, name, id, tags);
-    }
-
-    /**
-     * Registers the client as a service with Consul.  Registration enables
-     * the use of checks.
-     *
      * @param port  The public facing port of the service to register with Consul.
      * @param check The health check to run periodically.  Can be null.
      * @param name  Service name to register.
